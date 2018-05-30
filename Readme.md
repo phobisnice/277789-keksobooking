@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Гуков](https://up.htmlacademy.ru/javascript/14/user/277789).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Панчук](https://up.htmlacademy.ru/javascript/14/user/196094).
 
 ---
 
