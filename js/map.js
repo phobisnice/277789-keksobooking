@@ -9,8 +9,9 @@ var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_WIDTH = 50;
 
 var map = document.querySelector('.map');
-var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+var commonTemplate = document.querySelector('template');
+var mapCardTemplate = commonTemplate.content.querySelector('.map__card');
+var mapPinTemplate = commonTemplate.content.querySelector('.map__pin');
 var mapPinsContainer = document.querySelector('.map__pins');
 
 var generateRandomNumber = function (min, max) {
