@@ -7,12 +7,52 @@ var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'co
 var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var MAP_PIN_HEIGHT = 70;
 var MAP_PIN_WIDTH = 50;
+var MAP_MAIN_PIN_HEIGHT = 65;
+var MAP_MAIN_PIN_WIDTH = 65;
 
 var map = document.querySelector('.map');
+var mainMapPin = map.querySelector('.map__pin--main');
 var commonTemplate = document.querySelector('template');
 var mapCardTemplate = commonTemplate.content.querySelector('.map__card');
 var mapPinTemplate = commonTemplate.content.querySelector('.map__pin');
 var mapPinsContainer = document.querySelector('.map__pins');
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('.ad-form fieldset');
+var adressInput = adForm.querySelector('#address');
+
+var getMainMapPinlocationX = function () {
+  var mainMapPinLocationX = parseFloat(mainMapPin.style.left) - MAP_MAIN_PIN_WIDTH / 2;
+
+  return mainMapPinLocationX;
+};
+
+var getMainMapPinlocationY = function () {
+  var mainMapPinLocationY = parseFloat(mainMapPin.style.top) - MAP_MAIN_PIN_HEIGHT;
+
+  return mainMapPinLocationY;
+};
+
+var getMainMapPinlocationYinactive = function () {
+  var mainMapPinLocationYinactive = parseFloat(mainMapPin.style.top) - MAP_MAIN_PIN_HEIGHT / 2;
+
+  return mainMapPinLocationYinactive;
+};
+
+adressInput.value = getMainMapPinlocationX() + ', ' + getMainMapPinlocationYinactive();
+
+var disableFormInputs = function (formFieldsets) {
+  for (var i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].disabled = true;
+  }
+};
+
+var enableFormInputs = function (formFieldsets) {
+  for (var i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].disabled = false;
+  }
+};
+
+disableFormInputs(adFormFieldsets);
 
 var generateRandomNumber = function (min, max) {
   var randomNumber = min + Math.floor(Math.random() * (max + 1 - min));
@@ -77,30 +117,6 @@ var generateRandomOffers = function (numberOfOffers) {
 
 var offers = generateRandomOffers(8);
 
-map.classList.remove('map--faded');
-
-var createPin = function (offerInfo) {
-  var newPin = mapPinTemplate.cloneNode(true);
-
-  newPin.style = 'left: ' + (offerInfo.location.x - MAP_PIN_WIDTH / 2) + 'px; top: ' + (offerInfo.location.y - MAP_PIN_HEIGHT) + 'px;';
-  newPin.querySelector('img').src = offerInfo.author.avatar;
-  newPin.querySelector('img').alt = offerInfo.offer.title;
-
-  return newPin;
-};
-
-var renderPins = function (offersList) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < offersList.length; i++) {
-    fragment.appendChild(createPin(offersList[i]));
-  }
-
-  mapPinsContainer.appendChild(fragment);
-};
-
-renderPins(offers);
-
 var createCard = function (offerInfo) {
   var newCard = mapCardTemplate.cloneNode(true);
 
@@ -150,7 +166,53 @@ var createCard = function (offerInfo) {
   newCard.querySelector('.popup__photos').replaceChild(photosFragment, popupPhoto);
   newCard.querySelector('.popup__avatar').src = offerInfo.author.avatar;
 
+  var closePopupClickHandler = function () {
+    map.removeChild(newCard);
+  };
+
+  newCard.querySelector('.popup__close').addEventListener('click', closePopupClickHandler);
+
   return newCard;
 };
 
-map.insertBefore(createCard(offers[0]), map.querySelector('.map__filters-container'));
+var createPin = function (offerInfo) {
+  var newPin = mapPinTemplate.cloneNode(true);
+
+  newPin.style = 'left: ' + (offerInfo.location.x - MAP_PIN_WIDTH / 2) + 'px; top: ' + (offerInfo.location.y - MAP_PIN_HEIGHT) + 'px;';
+  newPin.querySelector('img').src = offerInfo.author.avatar;
+  newPin.querySelector('img').alt = offerInfo.offer.title;
+
+  var newPinClickHandler = function () {
+    if (map.querySelector('.map__card') === null) {
+      map.insertBefore(createCard(offerInfo), map.querySelector('.map__filters-container'));
+    } else {
+      map.replaceChild(createCard(offerInfo), map.querySelector('.map__card'));
+    }
+  };
+
+  newPin.addEventListener('click', newPinClickHandler);
+
+  return newPin;
+};
+
+var renderPins = function (offersList) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < offersList.length; i++) {
+    fragment.appendChild(createPin(offersList[i]));
+  }
+
+  mapPinsContainer.appendChild(fragment);
+};
+
+// map.insertBefore(createCard(offers[0]), map.querySelector('.map__filters-container'));
+
+var mainMapPinMouseUpHandler = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  enableFormInputs(adFormFieldsets);
+  adressInput.value = getMainMapPinlocationX() + ', ' + getMainMapPinlocationY();
+  renderPins(offers);
+};
+
+mainMapPin.addEventListener('mouseup', mainMapPinMouseUpHandler);
