@@ -255,30 +255,30 @@ adFormTimeInSelect.addEventListener('change', timeInSelectChangeHandler);
 adFormTimeOutSelect.addEventListener('change', timeOutSelectChangeHandler);
 
 var checkCapacityValidate = function () {
-  if (adFormRoomsSelect.value === '1' && adFormCapacitySelect.value !== '1') {
+  var rooms = adFormRoomsSelect.value;
+  var capacity = adFormCapacitySelect.value;
+
+  if (rooms === '1' && capacity !== '1') {
     adFormCapacitySelect.setCustomValidity('1 комната доступна только для одного гостя');
-  } else if (adFormRoomsSelect.value === '2' && (adFormCapacitySelect.value !== '1' || adFormCapacitySelect.value !== '2')) {
+  } else if (rooms === '2' && (capacity !== '1' || capacity !== '2')) {
     adFormCapacitySelect.setCustomValidity('2 комнаты доступна для одного или двух гостей');
-  } else if (adFormRoomsSelect.value === '3' && adFormCapacitySelect.value === '0') {
+  } else if (rooms === '3' && capacity === '0') {
     adFormCapacitySelect.setCustomValidity('3 комнаты подходят для одного, двух или трех гостей');
-  } else if (adFormRoomsSelect.value === '100' && adFormCapacitySelect.value !== '0') {
+  } else if (rooms === '100' && capacity !== '0') {
     adFormCapacitySelect.setCustomValidity('100 комнат - не для гостей');
   } else {
     adFormCapacitySelect.setCustomValidity('');
   }
 };
 
-var requiredInputs = [];
-requiredInputs.push(adFormTitleInput, adFormPriceInput, adFormCapacitySelect);
+var requiredInputs = [adFormTitleInput, adFormPriceInput, adFormCapacitySelect];
 
 var checkRequiredInputs = function (inputs) {
   for (var i = 0; i < inputs.length; i++) {
-    var checkItem = inputs[i];
-
-    if (checkItem.checkValidity() === false) {
-      checkItem.style.borderColor = 'crimson';
+    if (inputs[i].checkValidity() === false) {
+      inputs[i].style.borderColor = 'crimson';
     } else {
-      checkItem.style.borderColor = '#d9d9d3';
+      inputs[i].style.borderColor = '#d9d9d3';
     }
   }
 };
@@ -290,12 +290,20 @@ var adFormSubmitClickHandler = function () {
 
 adFormSubmit.addEventListener('click', adFormSubmitClickHandler);
 
+var isMapActive = function () {
+  return mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main') !== null;
+};
+
+var isCardOpen = function () {
+  return map.querySelector('.map__card') !== null;
+};
+
 var clearMap = function () {
-  if (map.querySelector('.map__card') !== null) {
+  if (isCardOpen()) {
     map.removeChild(map.querySelector('.map__card'));
   }
 
-  if (mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main') !== null) {
+  if (isMapActive()) {
     var mapPins = mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main');
 
     for (var i = 0; i < mapPins.length; i++) {
