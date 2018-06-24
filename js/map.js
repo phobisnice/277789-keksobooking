@@ -30,24 +30,28 @@ var adFormSubmit = adForm.querySelector('.ad-form__submit');
 var adFormReset = adForm.querySelector('.ad-form__reset');
 
 var getMainMapPinlocationX = function () {
-  var mainMapPinLocationX = parseFloat(mainMapPin.style.left) - MAP_MAIN_PIN_WIDTH / 2;
+  var mainMapPinLocationX = parseFloat(mainMapPin.style.left) + MAP_MAIN_PIN_WIDTH / 2;
 
   return mainMapPinLocationX;
 };
 
 var getMainMapPinlocationY = function () {
-  var mainMapPinLocationY = parseFloat(mainMapPin.style.top) - MAP_MAIN_PIN_HEIGHT;
+  var mainMapPinLocationY = parseFloat(mainMapPin.style.top) + MAP_MAIN_PIN_HEIGHT;
 
   return mainMapPinLocationY;
 };
 
-var getMainMapPinlocationYinactive = function () {
-  var mainMapPinLocationYinactive = parseFloat(mainMapPin.style.top) - MAP_MAIN_PIN_HEIGHT / 2;
-
-  return mainMapPinLocationYinactive;
+var mainMapPinDefaultPosition = {
+  top: mainMapPin.style.top,
+  left: mainMapPin.style.left
 };
 
-adFormAdressInput.setAttribute('value', getMainMapPinlocationX() + ', ' + getMainMapPinlocationYinactive());
+var defaultAdress = {
+  top: parseFloat(mainMapPinDefaultPosition.top) + MAP_MAIN_PIN_HEIGHT / 2,
+  left: getMainMapPinlocationX()
+};
+
+adFormAdressInput.setAttribute('value', defaultAdress.left + ', ' + defaultAdress.top);
 
 var disableFormInputs = function (formFieldsets) {
   for (var i = 0; i < formFieldsets.length; i++) {
@@ -214,15 +218,24 @@ var renderPins = function (offersList) {
   mapPinsContainer.appendChild(fragment);
 };
 
-var mainMapPinMouseUpHandler = function () {
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  enableFormInputs(adFormFieldsets);
-  adFormAdressInput.setAttribute('value', getMainMapPinlocationX() + ', ' + getMainMapPinlocationY());
-  renderPins(offers);
+var isMapDisable = function () {
+  return map.classList.contains('map--faded');
 };
 
-mainMapPin.addEventListener('mouseup', mainMapPinMouseUpHandler);
+var activateMap = function () {
+  if (isMapDisable()) {
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+    enableFormInputs(adFormFieldsets);
+    renderPins(offers);
+  }
+
+  adFormAdressInput.setAttribute('value', getMainMapPinlocationX() + ', ' + getMainMapPinlocationY());
+};
+
+mainMapPin.addEventListener('mouseup', function () {
+  activateMap();
+});
 
 var typeSelectChangeHandler = function () {
   if (adFormTypeSelect.value === 'bungalo') {
@@ -290,7 +303,7 @@ var adFormSubmitClickHandler = function () {
 
 adFormSubmit.addEventListener('click', adFormSubmitClickHandler);
 
-var isMapActive = function () {
+var isMapHasPins = function () {
   return mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main') !== null;
 };
 
@@ -303,7 +316,7 @@ var clearMap = function () {
     map.removeChild(map.querySelector('.map__card'));
   }
 
-  if (isMapActive()) {
+  if (isMapHasPins()) {
     var mapPins = mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main');
 
     for (var i = 0; i < mapPins.length; i++) {
@@ -316,8 +329,13 @@ var resetButtonClickHandler = function () {
   map.classList.add('map--faded');
   adForm.classList.add('ad-form--disabled');
   disableFormInputs(adFormFieldsets);
-  adFormAdressInput.setAttribute('value', getMainMapPinlocationX() + ', ' + getMainMapPinlocationYinactive());
+  mainMapPin.style.left = mainMapPinDefaultPosition.left;
+  mainMapPin.style.top = mainMapPinDefaultPosition.top;
+  adFormAdressInput.setAttribute('value', defaultAdress.left + ', ' + defaultAdress.top);
   clearMap();
+  for (var i = 0; i < requiredInputs.length; i++) {
+    requiredInputs[i].style.borderColor = '#d9d9d3';
+  }
 };
 
 adFormReset.addEventListener('click', resetButtonClickHandler);
