@@ -222,7 +222,7 @@ var isMapDisable = function () {
   return map.classList.contains('map--faded');
 };
 
-var mainMapPinMouseUpHandler = function () {
+var activateMap = function () {
   if (isMapDisable()) {
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
@@ -233,7 +233,9 @@ var mainMapPinMouseUpHandler = function () {
   adFormAdressInput.setAttribute('value', getMainMapPinlocationX() + ', ' + getMainMapPinlocationY());
 };
 
-mainMapPin.addEventListener('mouseup', mainMapPinMouseUpHandler);
+mainMapPin.addEventListener('mouseup', function () {
+  activateMap();
+});
 
 var typeSelectChangeHandler = function () {
   if (adFormTypeSelect.value === 'bungalo') {

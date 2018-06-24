@@ -37,20 +37,29 @@
         top: mapPin.offsetTop - shift.y
       };
 
+      var leaveMap = function () {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        window.activateMap();
+      };
+
       if (mapPinPostion.top < MIN_PIN_TOP_POSITION) {
         mapPinPostion.top = MIN_PIN_TOP_POSITION;
+        leaveMap();
       }
 
       if (mapPinPostion.top > MAX_PIN_TOP_POSITION) {
         mapPinPostion.top = MAX_PIN_TOP_POSITION;
+        leaveMap();
       }
 
       if (mapPinPostion.left < MIN_PIN_LEFT_POSITION) {
         mapPinPostion.left = MIN_PIN_LEFT_POSITION;
+        leaveMap();
       }
 
       if (mapPinPostion.left > mapPinRightPosition) {
         mapPinPostion.left = mapPinRightPosition;
+        leaveMap();
       }
 
       mapPin.style.top = mapPinPostion.top + 'px';
