@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var commonTemplate = document.querySelector('template');
   var mapCardTemplate = commonTemplate.content.querySelector('.map__card');
   var map = document.querySelector('.map');
@@ -54,11 +55,21 @@
     newCard.querySelector('.popup__photos').replaceChild(photosFragment, popupPhoto);
     newCard.querySelector('.popup__avatar').src = offerInfo.author.avatar;
 
-    var closePopupClickHandler = function () {
+    var deleteMapCard = function () {
       map.removeChild(newCard);
     };
 
+    var closePopupClickHandler = function () {
+      deleteMapCard();
+    };
+
+    var mapCardEscPressHandler = function (evt) {
+      window.util.isEscEvent(evt, deleteMapCard);
+      document.removeEventListener('keydown', mapCardEscPressHandler);
+    };
+
     newCard.querySelector('.popup__close').addEventListener('click', closePopupClickHandler);
+    document.addEventListener('keydown', mapCardEscPressHandler);
 
     return newCard;
   };

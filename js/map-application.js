@@ -8,8 +8,6 @@
   var adFormAdressInput = adForm.querySelector('#address');
   var adFormFieldsets = adForm.querySelectorAll('.ad-form fieldset');
 
-  var offers = window.offersGenerate(8);
-
   var mainMapPinDefaultPosition = {
     top: mainMapPin.style.top,
     left: mainMapPin.style.left
@@ -62,13 +60,19 @@
     }
   };
 
+  var dataSuccessHandler = function (offers) {
+    window.renderPins(offers);
+  };
+
+  var dataErrorHandler = window.error.create;
+
   window.mapApplication = {
     activate: function () {
       if (isMapDisable()) {
         map.classList.remove('map--faded');
         adForm.classList.remove('ad-form--disabled');
         enableFormInputs(adFormFieldsets);
-        window.renderPins(offers);
+        window.backend.load(dataSuccessHandler, dataErrorHandler);
       }
       adFormAdressInput.setAttribute('value', window.pinLocation.getX() + ', ' + window.pinLocation.getY());
     },
@@ -79,11 +83,9 @@
       mainMapPin.style.left = mainMapPinDefaultPosition.left;
       mainMapPin.style.top = mainMapPinDefaultPosition.top;
       adFormAdressInput.setAttribute('value', defaultAdress.left + ', ' + defaultAdress.top);
+      adForm.reset();
+      window.error.delete();
       clearMap();
     }
   };
-
-  mainMapPin.addEventListener('mouseup', function () {
-    window.mapApplication.activate();
-  });
 })();

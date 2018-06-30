@@ -11,6 +11,10 @@
 
   var maxPinRightPosition = map.offsetWidth - mapPin.offsetWidth;
 
+  var isMapDisable = function () {
+    return map.classList.contains('map--faded');
+  };
+
   mapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -52,9 +56,8 @@
     var mouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
 
-      if (upEvt.target !== mapPin.querySelector('img')) {
-        var mouseUpEvent = new Event('mouseup');
-        mapPin.dispatchEvent(mouseUpEvent);
+      if (isMapDisable()) {
+        window.mapApplication.activate();
       }
 
       document.removeEventListener('mousemove', mouseMoveHandler);
