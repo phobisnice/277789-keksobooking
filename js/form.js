@@ -11,6 +11,7 @@
   var adFormCapacitySelect = adForm.querySelector('#capacity');
   var adFormSubmit = adForm.querySelector('.ad-form__submit');
   var adFormReset = adForm.querySelector('.ad-form__reset');
+  var successMessage = document.querySelector('.success');
 
   var requiredInputs = [adFormTitleInput, adFormPriceInput, adFormCapacitySelect];
 
@@ -71,9 +72,37 @@
     }
   };
 
-  var adFormSubmitClickHandler = function () {
+  var showSuccessMessage = function () {
+    successMessage.classList.remove('hidden');
+    document.addEventListener('click', removeSucccessMessage);
+    document.addEventListener('keydown', successMessageEscHandler);
+  };
+
+  var removeSucccessMessage = function () {
+    successMessage.classList.add('hidden');
+    document.removeEventListener('click', removeSucccessMessage);
+    document.removeEventListener('keydown', successMessageEscHandler);
+  };
+
+  var successMessageEscHandler = function (evt) {
+    window.util.isEscEvent(evt, removeSucccessMessage);
+  };
+
+  var adFormSuccessSubmitHandler = function () {
+    window.mapApplication.reset();
+    showSuccessMessage();
+  };
+
+  var adFormErrorSubmitHandler = window.error.create;
+
+  var adFormSubmitClickHandler = function (evt) {
     checkCapacityValidate();
     checkRequiredInputs(requiredInputs);
+    if (adForm.checkValidity() === true) {
+      var formData = new FormData(adForm);
+      window.backend.save(formData, adFormSuccessSubmitHandler, adFormErrorSubmitHandler);
+      evt.preventDefault();
+    }
   };
 
   adFormSubmit.addEventListener('click', adFormSubmitClickHandler);
