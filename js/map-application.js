@@ -46,22 +46,9 @@
     return map.querySelector('.map__card') !== null;
   };
 
-  var clearMap = function () {
-    if (isCardOpen()) {
-      map.removeChild(map.querySelector('.map__card'));
-    }
-
-    if (isMapHasPins()) {
-      var mapPins = mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-      for (var i = 0; i < mapPins.length; i++) {
-        mapPinsContainer.removeChild(mapPins[i]);
-      }
-    }
-  };
-
   var dataSuccessHandler = function (offers) {
     window.renderPins(offers);
+    window.mapApplication.offersList = offers;
   };
 
   var dataErrorHandler = window.error.create;
@@ -76,6 +63,19 @@
       }
       adFormAdressInput.setAttribute('value', window.pinLocation.getX() + ', ' + window.pinLocation.getY());
     },
+    clearMap: function () {
+      if (isCardOpen()) {
+        map.removeChild(map.querySelector('.map__card'));
+      }
+
+      if (isMapHasPins()) {
+        var mapPins = mapPinsContainer.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+        for (var i = 0; i < mapPins.length; i++) {
+          mapPinsContainer.removeChild(mapPins[i]);
+        }
+      }
+    },
     reset: function () {
       map.classList.add('map--faded');
       adForm.classList.add('ad-form--disabled');
@@ -84,8 +84,10 @@
       mainMapPin.style.top = mainMapPinDefaultPosition.top;
       adFormAdressInput.setAttribute('value', defaultAdress.left + ', ' + defaultAdress.top);
       adForm.reset();
+      window.filterOffers.form.reset();
       window.error.delete();
-      clearMap();
-    }
+      this.clearMap();
+    },
+    offerList: []
   };
 })();
