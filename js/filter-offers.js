@@ -27,7 +27,7 @@
     high: function (price) {
       return price >= 50000;
     }
-  }; // вход массив преимуществ объявления -> проходим по всем чекам, если чекед то ищем в преимуществах index если не -1 то возвращаем тру
+  };
 
   var checkFeatures = function (offerFeatures) {
     var checkFlag = true;
