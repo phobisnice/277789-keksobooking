@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
+
   var filterForm = document.querySelector('.map__filters');
   var houseType = filterForm.querySelector('#housing-type');
   var housePrice = filterForm.querySelector('#housing-price');
@@ -51,7 +53,7 @@
   var redrawn = window.debounce(function (filtered) {
     window.mapApplication.clearMap();
     window.renderPins(filtered);
-  });
+  }, DEBOUNCE_INTERVAL);
 
   filterItems.forEach(function (item) {
     item.addEventListener('change', function () {
