@@ -31,8 +31,9 @@
 
   window.renderPins = function (offersList) {
     var fragment = document.createDocumentFragment();
+    var maxOffers = offersList.length > 5 ? 5 : offersList.length;
 
-    for (var i = 0; i < offersList.length; i++) {
+    for (var i = 0; i < maxOffers; i++) {
       fragment.appendChild(createPin(offersList[i]));
     }
 
