@@ -10,13 +10,13 @@
   var mapPinTemplate = commonTemplate.content.querySelector('.map__pin');
 
   var createPin = function (offerInfo) {
-    var newPin = mapPinTemplate.cloneNode(true);
+    var offerPin = mapPinTemplate.cloneNode(true);
 
-    newPin.style = 'left: ' + (offerInfo.location.x - MAP_PIN_WIDTH / 2) + 'px; top: ' + (offerInfo.location.y - MAP_PIN_HEIGHT) + 'px;';
-    newPin.querySelector('img').src = offerInfo.author.avatar;
-    newPin.querySelector('img').alt = offerInfo.offer.title;
+    offerPin.style = 'left: ' + (offerInfo.location.x - MAP_PIN_WIDTH / 2) + 'px; top: ' + (offerInfo.location.y - MAP_PIN_HEIGHT) + 'px;';
+    offerPin.querySelector('img').src = offerInfo.author.avatar;
+    offerPin.querySelector('img').alt = offerInfo.offer.title;
 
-    var newPinClickHandler = function () {
+    var offerPinClickHandler = function () {
       if (map.querySelector('.map__card') === null) {
         map.insertBefore(window.createCard(offerInfo), map.querySelector('.map__filters-container'));
       } else {
@@ -24,9 +24,9 @@
       }
     };
 
-    newPin.addEventListener('click', newPinClickHandler);
+    offerPin.addEventListener('click', offerPinClickHandler);
 
-    return newPin;
+    return offerPin;
   };
 
   window.renderPins = function (offersList) {

@@ -15,6 +15,16 @@
 
   var requiredInputs = [adFormTitleInput, adFormPriceInput, adFormCapacitySelect];
 
+  var validateTitle = function () {
+    var title = adFormTitleInput.value;
+
+    if (title.length < 30 || title.length > 100) {
+      adFormTitleInput.setCustomValidity('Минимальная длина заголовка — 30 символов, максимальная — 100 символов');
+    } else {
+      adFormTitleInput.setCustomValidity('');
+    }
+  };
+
   var typeSelectChangeHandler = function () {
     if (adFormTypeSelect.value === 'bungalo') {
       adFormPriceInput.min = 0;
@@ -96,6 +106,7 @@
   var adFormErrorSubmitHandler = window.error.create;
 
   var adFormSubmitClickHandler = function (evt) {
+    validateTitle();
     checkCapacityValidate();
     checkRequiredInputs(requiredInputs);
     if (adForm.checkValidity() === true) {
