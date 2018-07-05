@@ -7,24 +7,24 @@
   var map = document.querySelector('.map');
 
   window.createCard = function (offerInfo) {
-    var newCard = mapCardTemplate.cloneNode(true);
+    var offerCard = mapCardTemplate.cloneNode(true);
 
-    newCard.querySelector('.popup__title').textContent = offerInfo.offer.title;
-    newCard.querySelector('.popup__text--address').textContent = offerInfo.offer.address;
-    newCard.querySelector('.popup__text--price').textContent = offerInfo.offer.price + '₽/ночь';
+    offerCard.querySelector('.popup__title').textContent = offerInfo.offer.title;
+    offerCard.querySelector('.popup__text--address').textContent = offerInfo.offer.address;
+    offerCard.querySelector('.popup__text--price').textContent = offerInfo.offer.price + '₽/ночь';
 
     if (offerInfo.offer.type === 'palace') {
-      newCard.querySelector('.popup__type').textContent = 'Дворец';
+      offerCard.querySelector('.popup__type').textContent = 'Дворец';
     } else if (offerInfo.offer.type === 'flat') {
-      newCard.querySelector('.popup__type').textContent = 'Квартира';
+      offerCard.querySelector('.popup__type').textContent = 'Квартира';
     } else if (offerInfo.offer.type === 'house') {
-      newCard.querySelector('.popup__type').textContent = 'Дом';
+      offerCard.querySelector('.popup__type').textContent = 'Дом';
     } else {
-      newCard.querySelector('.popup__type').textContent = 'Бунгало';
+      offerCard.querySelector('.popup__type').textContent = 'Бунгало';
     }
 
-    newCard.querySelector('.popup__text--capacity').textContent = offerInfo.offer.rooms + ' комнаты для ' + offerInfo.offer.guests + ' гостей';
-    newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerInfo.offer.checkin + ', выезд до ' + offerInfo.offer.checkout;
+    offerCard.querySelector('.popup__text--capacity').textContent = offerInfo.offer.rooms + ' комнаты для ' + offerInfo.offer.guests + ' гостей';
+    offerCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerInfo.offer.checkin + ', выезд до ' + offerInfo.offer.checkout;
 
     var featuresFragment = document.createDocumentFragment();
 
@@ -36,13 +36,13 @@
       featuresFragment.appendChild(offerFeature);
     }
 
-    newCard.querySelector('.popup__features').innerHTML = '';
-    newCard.querySelector('.popup__features').appendChild(featuresFragment);
+    offerCard.querySelector('.popup__features').innerHTML = '';
+    offerCard.querySelector('.popup__features').appendChild(featuresFragment);
 
-    newCard.querySelector('.popup__description').textContent = offerInfo.offer.description;
+    offerCard.querySelector('.popup__description').textContent = offerInfo.offer.description;
 
     var photosFragment = document.createDocumentFragment();
-    var popupPhoto = newCard.querySelector('.popup__photo');
+    var popupPhoto = offerCard.querySelector('.popup__photo');
 
     for (var j = 0; j < offerInfo.offer.photos.length; j++) {
 
@@ -52,25 +52,33 @@
       photosFragment.appendChild(cardPhoto);
     }
 
-    newCard.querySelector('.popup__photos').replaceChild(photosFragment, popupPhoto);
-    newCard.querySelector('.popup__avatar').src = offerInfo.author.avatar;
+    offerCard.querySelector('.popup__photos').replaceChild(photosFragment, popupPhoto);
+    offerCard.querySelector('.popup__avatar').src = offerInfo.author.avatar;
 
-    var deleteMapCard = function () {
-      map.removeChild(newCard);
+    var offerCardElements = [].slice.call(offerCard.children);
+
+    offerCardElements.forEach(function (element) {
+      if (element.children.length === 0 && element.textContent.trim().length === 0 && element.tagName !== 'IMG') {
+        element.remove();
+      }
+    });
+
+    var removeMapCard = function () {
+      map.removeChild(offerCard);
     };
 
     var closePopupClickHandler = function () {
-      deleteMapCard();
+      removeMapCard();
     };
 
     var mapCardEscPressHandler = function (evt) {
-      window.util.isEscEvent(evt, deleteMapCard);
+      window.util.isEscEvent(evt, removeMapCard);
       document.removeEventListener('keydown', mapCardEscPressHandler);
     };
 
-    newCard.querySelector('.popup__close').addEventListener('click', closePopupClickHandler);
+    offerCard.querySelector('.popup__close').addEventListener('click', closePopupClickHandler);
     document.addEventListener('keydown', mapCardEscPressHandler);
 
-    return newCard;
+    return offerCard;
   };
 })();

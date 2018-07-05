@@ -8,17 +8,17 @@
   var adFormAdressInput = adForm.querySelector('#address');
   var adFormFieldsets = adForm.querySelectorAll('.ad-form fieldset');
 
-  var mainMapPinDefaultPosition = {
+  var mainMapPinInitialPosition = {
     top: mainMapPin.style.top,
     left: mainMapPin.style.left
   };
 
-  var defaultAdress = {
-    top: parseFloat(mainMapPinDefaultPosition.top) + window.pinLocation.pinHeight / 2,
+  var initialAdress = {
+    top: parseFloat(mainMapPinInitialPosition.top) + window.pinLocation.pinHeight / 2,
     left: window.pinLocation.getX()
   };
 
-  adFormAdressInput.setAttribute('value', defaultAdress.left + ', ' + defaultAdress.top);
+  adFormAdressInput.setAttribute('value', initialAdress.left + ', ' + initialAdress.top);
 
   var disableFormInputs = function (formFieldsets) {
     for (var i = 0; i < formFieldsets.length; i++) {
@@ -80,12 +80,12 @@
       map.classList.add('map--faded');
       adForm.classList.add('ad-form--disabled');
       disableFormInputs(adFormFieldsets);
-      mainMapPin.style.left = mainMapPinDefaultPosition.left;
-      mainMapPin.style.top = mainMapPinDefaultPosition.top;
-      adFormAdressInput.setAttribute('value', defaultAdress.left + ', ' + defaultAdress.top);
+      mainMapPin.style.left = mainMapPinInitialPosition.left;
+      mainMapPin.style.top = mainMapPinInitialPosition.top;
+      adFormAdressInput.setAttribute('value', initialAdress.left + ', ' + initialAdress.top);
       adForm.reset();
       window.filterOffers.form.reset();
-      window.error.delete();
+      window.error.takeOff();
       this.clearMap();
     },
     offerList: []
