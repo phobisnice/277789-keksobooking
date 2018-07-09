@@ -9,7 +9,7 @@
   var houseRooms = filterForm.querySelector('#housing-rooms');
   var houseGuests = filterForm.querySelector('#housing-guests');
 
-  var houseFeatures = [].slice.call(filterForm.querySelectorAll('[name=features]'));
+  var houseFeatures = Array.prototype.slice.call(filterForm.querySelectorAll('[name=features]'));
   var filterItems = [houseType, housePrice, houseRooms, houseGuests].concat(houseFeatures);
 
   var checkParameter = function (toCheck, value) {
