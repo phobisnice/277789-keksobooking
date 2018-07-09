@@ -28,13 +28,11 @@
 
     var featuresFragment = document.createDocumentFragment();
 
-    for (var i = 0; i < offerInfo.offer.features.length; i++) {
+    offerInfo.offer.features.forEach(function (feature) {
       var offerFeature = document.createElement('li');
-
-      offerFeature.classList.add('popup__feature', 'popup__feature--' + offerInfo.offer.features[i]);
-
+      offerFeature.classList.add('popup__feature', 'popup__feature--' + feature);
       featuresFragment.appendChild(offerFeature);
-    }
+    });
 
     offerCard.querySelector('.popup__features').innerHTML = '';
     offerCard.querySelector('.popup__features').appendChild(featuresFragment);
@@ -44,18 +42,16 @@
     var photosFragment = document.createDocumentFragment();
     var popupPhoto = offerCard.querySelector('.popup__photo');
 
-    for (var j = 0; j < offerInfo.offer.photos.length; j++) {
-
+    offerInfo.offer.photos.forEach(function (photo) {
       var cardPhoto = popupPhoto.cloneNode();
-      cardPhoto.src = offerInfo.offer.photos[j];
-
+      cardPhoto.src = photo;
       photosFragment.appendChild(cardPhoto);
-    }
+    });
 
     offerCard.querySelector('.popup__photos').replaceChild(photosFragment, popupPhoto);
     offerCard.querySelector('.popup__avatar').src = offerInfo.author.avatar;
 
-    var offerCardElements = [].slice.call(offerCard.children);
+    var offerCardElements = Array.prototype.slice.call(offerCard.children);
 
     offerCardElements.forEach(function (element) {
       if (element.children.length === 0 && element.textContent.trim().length === 0 && element.tagName !== 'IMG') {

@@ -73,13 +73,9 @@
   };
 
   var checkRequiredInputs = function (inputs) {
-    for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].checkValidity() === false) {
-        inputs[i].style.borderColor = 'crimson';
-      } else {
-        inputs[i].style.borderColor = '#d9d9d3';
-      }
-    }
+    inputs.forEach(function (inputToCheck) {
+      inputToCheck.style.borderColor = inputToCheck.checkValidity() ? '#d9d9d3' : 'crimson';
+    });
   };
 
   var showSuccessMessage = function () {
@@ -109,7 +105,7 @@
     validateTitle();
     checkCapacityValidate();
     checkRequiredInputs(requiredInputs);
-    if (adForm.checkValidity() === true) {
+    if (adForm.checkValidity()) {
       var formData = new FormData(adForm);
       window.backend.save(formData, adFormSuccessSubmitHandler, adFormErrorSubmitHandler);
       evt.preventDefault();
@@ -121,9 +117,9 @@
   adFormReset.addEventListener('click', function () {
     window.mapApplication.reset();
 
-    for (var i = 0; i < requiredInputs.length; i++) {
-      requiredInputs[i].style.borderColor = '#d9d9d3';
-    }
+    requiredInputs.forEach(function (requiredInput) {
+      requiredInput.style.borderColor = '#d9d9d3';
+    });
   });
 
 })();
