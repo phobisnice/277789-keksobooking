@@ -17,7 +17,7 @@
     offerPin.querySelector('img').alt = offerInfo.offer.title;
 
     var offerPinClickHandler = function () {
-      if (map.querySelector('.map__card') === null) {
+      if (!map.querySelector('.map__card')) {
         map.insertBefore(window.createCard(offerInfo), map.querySelector('.map__filters-container'));
       } else {
         map.replaceChild(window.createCard(offerInfo), map.querySelector('.map__card'));
@@ -33,9 +33,9 @@
     var fragment = document.createDocumentFragment();
     var maxOffers = offersList.length > 5 ? 5 : offersList.length;
 
-    for (var i = 0; i < maxOffers; i++) {
-      fragment.appendChild(createPin(offersList[i]));
-    }
+    offersList.slice(0, maxOffers).forEach(function (offer) {
+      fragment.appendChild(createPin(offer));
+    });
 
     mapPinsContainer.appendChild(fragment);
   };
